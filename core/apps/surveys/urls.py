@@ -4,6 +4,7 @@ from core.apps.surveys import views
 
 
 urlpatterns = [
-    path('', views.SurveyListView.as_view(), name='index'),
-    path("<uuid:pk>/", views.SurveyFormView.as_view(), name="survey-form"),
+    path("", views.index, name="index"),
+    path('surveys/dashboard', views.SurveyListView.as_view(), name='dashboard'),
+    path("surveys/<uuid:pk>/", views.SurveyTakeFormView.as_view(), name="survey-form"),
 ]
