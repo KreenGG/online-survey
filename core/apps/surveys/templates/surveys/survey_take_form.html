@@ -12,10 +12,10 @@
    </div>
     
     <div class=" container container-block py-4 px-3 mt-2 border rounded" >
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <a href="#" class="btn btn-primary">Отправить</a>
+            <input type="submit" class="btn btn-primary">
         </form>
     </div>
 

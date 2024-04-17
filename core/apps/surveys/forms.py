@@ -3,7 +3,7 @@ from django import forms
 from core.apps.surveys.choices import QuestionType
 
 
-class SurveyForm(forms.Form):
+class SurveyTakeForm(forms.Form):
     def __init__(self, survey, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.survey = survey

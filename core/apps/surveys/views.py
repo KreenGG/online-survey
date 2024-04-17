@@ -1,11 +1,7 @@
-from typing import Any
-from django.forms import BaseModelForm
-from django.shortcuts import redirect
-from core.apps.surveys.forms import SurveyForm
+from django.shortcuts import get_object_or_404, redirect, render
+from core.apps.surveys.forms import SurveyTakeForm
 from core.apps.surveys.models import Answer, Question, Survey
 from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
 
 
 def index(request):
@@ -23,18 +19,28 @@ class SurveyListView(ListView):
         # context["surveys"] = Survey.objects.all()
         return context
     
+def show_survey(request, pk):
+    survey = get_object_or_404(Survey, pk=pk)
+    form = SurveyTakeForm(survey)
+    
+    context = {
+      "survey": survey,
+      "form": form,
+    }
+    
+    if request.method == "POST":
+        form = SurveyTakeForm(survey, request.POST)
+        
+        for question in form.data:
+            if question.startswith("question_"):
+                question_id = question.removeprefix("question_")
+                value = form.data.get(question)
 
-class SurveyTakeFormView(CreateView):
-    form_class = SurveyForm
-    template_name = "surveys/survey_form.html"
-    survey_id = None
-    
-    def get_form(self, form_class: type[SurveyForm] | None = ...) -> SurveyForm:
-        self.survey_id = self.request.resolver_match.kwargs.pop("pk")
-        survey = Survey.objects.get(pk=self.survey_id)
-        return SurveyForm(survey)
-    
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["survey"] = Survey.objects.get(pk=self.survey_id)
-        return context
+                Answer.objects.create(
+                    question = Question.objects.get(pk=question_id),
+                    value = value
+                )
+        # TODO: Сделать страницу успешного прохождения и редиректить туда
+        return redirect("/")
+
+    return render(request, "surveys/survey_take_form.html", context)

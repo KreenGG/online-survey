@@ -24,6 +24,10 @@ class Survey(BaseModel):
 
     def __str__(self):
         return self.title
+    
+    
+    def get_absolute_url(self):
+        return f"/surveys/{self.id}/"
 
 
 class Question(BaseModel):
@@ -41,7 +45,7 @@ class Question(BaseModel):
         ordering = ["ordering"]
 
     def __str__(self):
-        return f"{self.title} | Опрос-{self.survey.title}"
+        return f"Опрос: {self.survey.title} | {self.title}"
 
 
 class Answer(BaseModel):
