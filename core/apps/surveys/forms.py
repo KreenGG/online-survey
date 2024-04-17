@@ -9,18 +9,19 @@ class SurveyTakeForm(forms.Form):
         self.survey = survey
         for question in survey.questions.all():
             match question.question_type:
-                case QuestionType.TEXT :
+                case QuestionType.TEXT:
                     self.fields[f"question_{question.id}"] = forms.CharField(
                         widget=forms.TextInput(
-                            attrs={"class": "form-control"})
+                            attrs={"class": "form-control"},
+                        ),
                     )
-                    
-                case QuestionType.RATING:                    
+
+                case QuestionType.RATING:
                     self.fields[f"question_{question.id}"] = forms.ChoiceField(
-                        choices=[(1, 1 ), (2, 2 ), (3, 3), (4, 4), (5, 5)],
+                        choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
                         widget=forms.Select(
-                            attrs={"class": "form-select"}), 
+                            attrs={"class": "form-select"},
+                        ),
                     )
-            
             self.fields[f"question_{question.id}"].label = question.title
-            # self.fields[f"question_{question.id}"].widget.attrs.update({"class": "form-control"})
+            # self.fields[f"question_{question.id}"].widget.attrs.update({"class": "form-control"})     # noqa
