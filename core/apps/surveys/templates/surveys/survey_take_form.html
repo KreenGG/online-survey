@@ -5,18 +5,25 @@
 
 <div class="container">
    <div class="container container-block border rounded px-4">
-        <h1 class="display-4">{{ survey.title }}</h1>
+        <h1 class="display-4">{{ survey.title }} </h1>
         <blockquote class="blockquote">
             <p>{{ survey.description }}</p>
         </blockquote>
+        {% if user.is_superuser %}
+            <div class="py-2">
+                <a class="btn btn-primary" href="{{ survey_edit_link }}" role="button">Редактировать</a>
+            </div>
+        {% endif %}
    </div>
     
     <div class=" container container-block py-4 px-3 mt-2 border rounded" >
+        
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" class="btn btn-primary">
         </form>
+
     </div>
 
 </div>

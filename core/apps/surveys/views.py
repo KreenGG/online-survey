@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views.generic.list import ListView
 
 from core.apps.surveys.forms import SurveyTakeForm
@@ -6,8 +7,7 @@ from core.apps.surveys.models import Answer, Question, Survey
 
 
 def index(request):
-    # Сделать auth
-    return redirect("dashboard")
+    return render(request, "surveys/index.html")
 
 
 class SurveyListView(ListView):
@@ -23,9 +23,16 @@ def show_survey(request, pk):
     survey = get_object_or_404(Survey, pk=pk)
     form = SurveyTakeForm(survey)
 
+    survey_edit_link = (
+        reverse("admin:surveys_survey_changelist")
+        + str(survey.id)
+        + "/change"
+    )
+
     context = {
       "survey": survey,
       "form": form,
+      "survey_edit_link": survey_edit_link,
     }
 
     if request.method == "POST":
