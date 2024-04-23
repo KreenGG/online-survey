@@ -1,0 +1,58 @@
+<div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Панель администратора
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse " data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          
+          <div>
+            <h4 class="display-6">Информация об опросе:</h4>
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Дата создания: 
+                <span class="badge text-bg-primary rounded-pill">{{ survey.created_at }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Количество участников: 
+                <span class="badge text-bg-primary rounded-pill">{{ participants }}</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-3">
+            <h4 class="display-6">Средний рейтинг по вопросам:</h4>
+            <ul class="list-group">
+              {% for question in rating_questions %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ question.question.title }}
+                    <span class="badge text-bg-primary rounded-pill">{{ question.avg_rating }}</span>
+                  </li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="mt-3">
+            <h4 class="display-6">Прочитать ответы к вопросу:</h4>
+            <div class="list-group">
+              {% for question in text_questions %}
+                <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                  <div class="d-flex w-100 justify-content-between">
+                    <p class="mb-1">{{question.title}}</p>
+                  </div>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="mt-2">
+            <a class="btn btn-primary" href="{{ survey_edit_link }}" role="button">Редактировать опрос</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+</div>
+    

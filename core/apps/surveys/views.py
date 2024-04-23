@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
 from django.views.generic.list import ListView
 
 from core.apps.surveys.forms import SurveyTakeForm
 from core.apps.surveys.models import Answer, Question, Survey
+from core.apps.surveys.services import SurveyService
 
 
 def index(request):
@@ -20,20 +20,9 @@ class SurveyListView(ListView):
 
 
 def show_survey(request, pk):
+    service = SurveyService()
     survey = get_object_or_404(Survey, pk=pk)
     form = SurveyTakeForm(survey)
-
-    survey_edit_link = (
-        reverse("admin:surveys_survey_changelist")
-        + str(survey.id)
-        + "/change"
-    )
-
-    context = {
-      "survey": survey,
-      "form": form,
-      "survey_edit_link": survey_edit_link,
-    }
 
     if request.method == "POST":
         form = SurveyTakeForm(survey, request.POST)
@@ -49,5 +38,14 @@ def show_survey(request, pk):
                 )
         # TODO: Сделать страницу успешного прохождения и редиректить туда
         return redirect("/")
+
+    context = {
+      "survey": survey,
+      "form": form,
+      "survey_edit_link": service.get_edit_link(survey),
+      "participants": service.get_participants_number(survey),
+      "rating_questions": service.get_rating_questions(survey),
+      "text_questions": service.get_text_questions(survey),     # TODO: сделать обзор ответов по вопросам
+    }
 
     return render(request, "surveys/survey_take_form.html", context)

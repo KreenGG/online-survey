@@ -9,14 +9,16 @@
         <blockquote class="blockquote">
             <p>{{ survey.description }}</p>
         </blockquote>
-        {% if user.is_superuser %}
-            <div class="py-2">
-                <a class="btn btn-primary" href="{{ survey_edit_link }}" role="button">Редактировать</a>
-            </div>
-        {% endif %}
-   </div>
+        
+    </div>
+
+    {% if user.is_superuser %}
+    <div class="container container-block border rounded px-3 py-2">
+        {% include "surveys/components/admin_panel.html" %}
+    </div>
+    {% endif %}
     
-    <div class=" container container-block py-4 px-3 mt-2 border rounded" >
+    <div class=" container container-block py-3 px-3 mt-2 border rounded" >
         
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
