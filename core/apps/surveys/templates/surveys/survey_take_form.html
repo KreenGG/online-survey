@@ -18,15 +18,23 @@
     </div>
     {% endif %}
     
-    <div class=" container container-block py-3 px-3 mt-2 border rounded" >
-        
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" class="btn btn-primary">
-        </form>
+    {% if can_take_survey or user.is_superuser %}
+        <div class=" container container-block py-2 px-3 mt-2 border rounded" >
+            
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% if not user.is_superuser %}
+                    <input type="submit" class="btn btn-primary">
+                {% endif %}
+            </form>
 
-    </div>
+        </div>
+    {% else %}
+        <div class="container container-block border rounded px-3 py-2">
+            <h1 class="display-6">Вы уже проходили этот опрос</h1>
+        </div>
+    {% endif %}
 
 </div>
 

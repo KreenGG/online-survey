@@ -37,11 +37,13 @@ def show_survey(request, pk):
                     value=value,
                 )
         # TODO: Сделать страницу успешного прохождения и редиректить туда
+        request.session[str(survey.id)] = False
         return redirect("/")
 
     context = {
       "survey": survey,
       "form": form,
+      "can_take_survey": service.can_take_survey(request, survey),
       "survey_edit_link": service.get_edit_link(survey),
       "participants": service.get_participants_number(survey),
       "rating_questions": service.get_rating_questions(survey),

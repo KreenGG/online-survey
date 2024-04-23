@@ -38,3 +38,6 @@ class SurveyService:
             survey=survey, question_type=QuestionType.TEXT,
         )
         return text_questions
+
+    def can_take_survey(self, request, survey: Survey) -> bool:
+        return request.session.get(str(survey.id), True)
