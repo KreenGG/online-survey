@@ -33,7 +33,7 @@ class SurveyService:
             question_avg.append({"question": question, "avg_rating": avg_rating})
         return question_avg
 
-    def get_text_questions(self, survey: Survey):
+    def get_text_questions(self, survey: Survey) -> list[Question]:
         text_questions = Question.objects.filter(
             survey=survey, question_type=QuestionType.TEXT,
         )

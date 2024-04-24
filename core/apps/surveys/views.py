@@ -19,6 +19,10 @@ class SurveyListView(ListView):
         return context
 
 
+def show_succes_page(request):
+    return render(request, "surveys/success_page.html")
+
+
 def show_survey(request, pk):
     service = SurveyService()
     survey = get_object_or_404(Survey, pk=pk)
@@ -36,9 +40,8 @@ def show_survey(request, pk):
                     question=Question.objects.get(pk=question_id),
                     value=value,
                 )
-        # TODO: Сделать страницу успешного прохождения и редиректить туда
         request.session[str(survey.id)] = False
-        return redirect("/")
+        return redirect("success-page")
 
     context = {
       "survey": survey,
