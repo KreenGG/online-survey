@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.list import ListView
 
 from core.apps.surveys.forms import SurveyTakeForm
-from core.apps.surveys.models import Answer, Question, Survey
+from core.apps.surveys.models import Answer, Question, Survey, SurveyTake
 from core.apps.surveys.services import SurveyService
 
 
@@ -31,6 +31,7 @@ def show_survey(request, pk):
     if request.method == "POST":
         form = SurveyTakeForm(survey, request.POST)
 
+        survey_take = SurveyTake.objects.create(survey=survey)
         for question in form.data:
             if question.startswith("question_"):
                 question_id = question.removeprefix("question_")
@@ -39,6 +40,7 @@ def show_survey(request, pk):
                 Answer.objects.create(
                     question=Question.objects.get(pk=question_id),
                     value=value,
+                    survey_take=survey_take,
                 )
         request.session[str(survey.id)] = False
         return redirect("success-page")

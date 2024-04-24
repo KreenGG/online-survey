@@ -27,9 +27,12 @@ class SurveyService:
         for question in rating_questions:
             answers = Answer.objects.filter(question=question)
             rating = 0
-            for answer in answers:
-                rating += int(answer.value)
-            avg_rating = round(rating / len(answers), 2)
+            if len(answers) == 0:
+                avg_rating = 0
+            else:
+                for answer in answers:
+                    rating += int(answer.value)
+                    avg_rating = round(rating / len(answers), 2)
             question_avg.append({"question": question, "avg_rating": avg_rating})
         return question_avg
 
