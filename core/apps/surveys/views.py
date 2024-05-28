@@ -1,9 +1,14 @@
+import os
+
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.list import ListView
 
 from core.apps.surveys.forms import SurveyTakeForm
 from core.apps.surveys.models import Answer, Question, Survey, SurveyTake
+from core.apps.surveys.reports import create_report
 from core.apps.surveys.services import SurveyService
+from core.project import settings
 
 
 def index(request):
@@ -21,6 +26,19 @@ class SurveyListView(ListView):
 
 def show_succes_page(request):
     return render(request, "surveys/success_page.html")
+
+
+def get_report(request, pk):
+    survey = get_object_or_404(Survey, pk=pk)
+    create_report(survey)
+
+    file_path = os.path.join(settings.MEDIA_ROOT, f"{survey.pk}.xlsx")
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            return response
+    raise Http404
 
 
 def show_survey(request, pk):
@@ -52,7 +70,6 @@ def show_survey(request, pk):
       "survey_edit_link": service.get_edit_link(survey),
       "participants": service.get_participants_number(survey),
       "rating_questions": service.get_rating_questions(survey),
-      "text_questions": service.get_text_questions(survey),     # TODO: сделать обзор ответов по вопросам
     }
 
     return render(request, "surveys/survey_take_form.html", context)

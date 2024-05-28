@@ -42,5 +42,11 @@ class SurveyService:
         )
         return text_questions
 
+    def get_choices_questions(self, survey: Survey) -> list[Question]:
+        hoices_questions = Question.objects.filter(
+            survey=survey, question_type=QuestionType.CHOICES,
+        )
+        return hoices_questions
+
     def can_take_survey(self, request, survey: Survey) -> bool:
         return request.session.get(str(survey.id), True)

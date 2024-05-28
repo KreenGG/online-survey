@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'nested_inline',
     # first-party apps
     'core.apps.surveys',
 ]
@@ -114,6 +115,9 @@ STATIC_ROOT = BASE_DIR / "static"
 STATIC_DIRS = [
     BASE_DIR / "core/apps/surveys/static",
 ]
+
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

@@ -23,5 +23,18 @@ class SurveyTakeForm(forms.Form):
                             attrs={"class": "form-select"},
                         ),
                     )
+
+                case QuestionType.CHOICES:
+                    choices_list = question.choices.values_list("title", flat=True).all()
+                    choices = []
+                    for choice in choices_list:
+                        choices.append((choice, choice))
+
+                    self.fields[f"question_{question.id}"] = forms.ChoiceField(
+                        choices=choices,
+                        widget=forms.Select(
+                            attrs={"class": "form-select"},
+                        ),
+                    )
             self.fields[f"question_{question.id}"].label = question.title
             # self.fields[f"question_{question.id}"].widget.attrs.update({"class": "form-control"})     # noqa

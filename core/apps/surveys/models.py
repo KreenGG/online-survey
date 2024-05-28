@@ -71,3 +71,15 @@ class Answer(BaseModel):
 
     def __str__(self):
         return f"{self.question}: {self.value}"
+
+
+class QuestionChoice(BaseModel):
+    question = models.ForeignKey(Question, related_name="choices", on_delete=models.CASCADE, verbose_name="Вопрос")
+    title = models.CharField(max_length=500, verbose_name="Вариант ответа")
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Вариант ответа"
+        verbose_name_plural = "Варианты ответа"

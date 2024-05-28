@@ -1,13 +1,22 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
+from nested_inline.admin import NestedModelAdmin, NestedStackedInline
 
-from core.apps.surveys.models import Answer, Question, Survey, SurveyTake
+from core.apps.surveys.models import (Answer, Question, QuestionChoice, Survey,
+                                      SurveyTake)
 
 
-class QuestionInline(admin.TabularInline):
+class QuestionChoiceInline(NestedStackedInline):
+    model = QuestionChoice
+    extra = 0
+
+
+class QuestionInline(NestedStackedInline):
     model = Question
     sortable_by = ["ordering"]
+    inlines = [QuestionChoiceInline]
+    extra = 0
 
 
 class AnswerInline(admin.TabularInline):
@@ -19,7 +28,7 @@ class AnswerInline(admin.TabularInline):
 
 
 @admin.register(Survey)
-class SurveyAdmin(admin.ModelAdmin):
+class SurveyAdmin(NestedModelAdmin):
     search_fields = ["title"]
     inlines = [QuestionInline]
     list_display = ["title", "questions_count", "link", "created_at"]
@@ -97,3 +106,9 @@ class AnswerAdmin(admin.ModelAdmin):
             + "/change"
         )
         return format_html(f"<a href={url}>{answer.question.survey.title}</a>")
+
+
+@admin.register(QuestionChoice)
+class QuestionChoiceAdmin(admin.ModelAdmin):
+    list_display = ["question", "title"]
+    list_filter = ["question__survey_id"]
