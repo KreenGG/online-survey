@@ -94,6 +94,7 @@ class AnswerAdmin(admin.ModelAdmin):
     ]
     readonly_fields = [field.name for field in Answer._meta.get_fields()]
     list_filter = ["question__survey_id"]
+    search_fields = ["question__title"]
 
     def get_queryset(self, request):
         return Answer.objects.select_related("question")
@@ -106,9 +107,3 @@ class AnswerAdmin(admin.ModelAdmin):
             + "/change"
         )
         return format_html(f"<a href={url}>{answer.question.survey.title}</a>")
-
-
-@admin.register(QuestionChoice)
-class QuestionChoiceAdmin(admin.ModelAdmin):
-    list_display = ["question", "title"]
-    list_filter = ["question__survey_id"]

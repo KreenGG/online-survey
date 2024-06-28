@@ -17,7 +17,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", default="mysecretkey")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", default=True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -69,10 +69,6 @@ WSGI_APPLICATION = 'core.project.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {  # noqa: F405
-    #     'ENGINE': 'django.db.backends.sqlite3', # noqa: F405
-    #     'NAME': BASE_DIR / 'db.sqlite3', # noqa: F405
-    # },
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": env("POSTGRES_DB"),
